@@ -11,9 +11,11 @@ exports.signup = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            status: 'error',
-            param: errors.array()[0].param,
-            err: errors.array()[0].msg
+            meta: {
+                errorCode: 1,
+                message: errors.array()[0].msg
+            },
+            data: {}
         })
     }
 
@@ -22,18 +24,26 @@ exports.signup = (req, res) => {
     user.save((err, user) => {
         if (err) {
             return res.status(400).json({
-                status: 'error',
-                err: "Not able to signup, Please check details"
+                meta: {
+                    errorCode: 1,
+                    message: "Not able to signup, Please check details"
+                },
+                data: {}
             })
         }
 
         signUpMail(user.email, user.name);
 
         res.json({
-            staus: 'success',
-            name: user.name,
-            email: user.email,
-            id: user._id
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                name: user.name,
+                email: user.email,
+                id: user._id
+            }
         })
     })
 }
@@ -46,24 +56,32 @@ exports.signin = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            status: 'error',
-            param: errors.array()[0].param,
-            err: errors.array()[0].msg
+            meta: {
+                errorCode: 1,
+                message: errors.array()[0].msg
+            },
+            data: {}
         })
     }
 
     User.findOne({ email }, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
-                status: 'error',
-                err: 'User Not Found'
+                meta: {
+                    errorCode: 1,
+                    message: 'User Not Found'
+                },
+                data: {}
             })
         }
 
         if (!user.authenticate(password)) {
             return res.status(400).json({
-                status: 'error',
-                err: 'EmailId and Password do not match'
+                meta: {
+                    errorCode: 1,
+                    message: 'EmailId and Password do not match'
+                },
+                data: {}
             })
         }
 
@@ -72,9 +90,14 @@ exports.signin = (req, res) => {
         const { _id, name, email, role } = user;
 
         return res.json({
-            status: 'success',
-            token,
-            user: { _id, name, email, role }
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                token,
+                user: { _id, name, email, role }
+            }
         })
     })
 }
@@ -83,7 +106,11 @@ exports.signout = (req, res) => {
     res.clearCookie('token');
 
     res.json({
-        msg: "User Sign out Successfully"
+        meta: {
+            errorCode: 0,
+            message: 'User Sign out Successfully'
+        },
+        data: {}
     })
 }
 
@@ -94,13 +121,25 @@ exports.forgetPassword = (req, res) => {
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
-                    error: "User with this email does not exists."
+                    meta: {
+                        errorCode: 1,
+                        message: "User with this email does not exists."
+                    },
+                    data: {}
                 })
             }
             let salt = user.salt;
             let givenPassObj = sha256(user.encry_password, salt)
 
-            return res.json(user)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: 'success'
+                },
+                data: {
+                    user
+                }
+            })
         })
 }
 
@@ -116,7 +155,11 @@ exports.isAuthenticated = (req, res, next) => {
 
     if (!check) {
         return res.status(403).json({
-            error: "Access Denied"
+            meta: {
+                errorCode: 1,
+                message: "Access Denied"
+            },
+            data: {}
         })
     }
 
@@ -126,7 +169,11 @@ exports.isAuthenticated = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
     if (req.profile.role === 0) {
         return res.status(403).json({
-            error: "Access Denied"
+            meta: {
+                errorCode: 1,
+                message: "Access Denied"
+            },
+            data: {}
         })
     }
     next();
