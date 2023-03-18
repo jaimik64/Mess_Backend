@@ -11,8 +11,9 @@ exports.signup = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(422).json({
+            status: 'error',
             param: errors.array()[0].param,
-            error: errors.array()[0].msg
+            err: errors.array()[0].msg
         })
     }
 
@@ -20,8 +21,8 @@ exports.signup = (req, res) => {
 
     user.save((err, user) => {
         if (err) {
-            console.log(err);
             return res.status(400).json({
+                status: 'error',
                 err: "Not able to signup, Please check details"
             })
         }
@@ -29,6 +30,7 @@ exports.signup = (req, res) => {
         signUpMail(user.email, user.name);
 
         res.json({
+            staus: 'success',
             name: user.name,
             email: user.email,
             id: user._id
@@ -44,20 +46,23 @@ exports.signin = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(422).json({
+            status: 'error',
             param: errors.array()[0].param,
-            error: errors.array()[0].msg
+            err: errors.array()[0].msg
         })
     }
 
     User.findOne({ email }, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
+                status: 'error',
                 err: 'User Not Found'
             })
         }
 
         if (!user.authenticate(password)) {
             return res.status(400).json({
+                status: 'error',
                 err: 'EmailId and Password do not match'
             })
         }
@@ -67,7 +72,9 @@ exports.signin = (req, res) => {
         const { _id, name, email, role } = user;
 
         return res.json({
-            token, user: { _id, name, email, role }
+            status: 'success',
+            token,
+            user: { _id, name, email, role }
         })
     })
 }
