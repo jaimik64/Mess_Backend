@@ -10,7 +10,7 @@ exports.signup = (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(422).json({
+        return res.status(400).json({
             status: 'error',
             param: errors.array()[0].param,
             err: errors.array()[0].msg
@@ -45,7 +45,7 @@ exports.signin = (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(422).json({
+        return res.status(400).json({
             status: 'error',
             param: errors.array()[0].param,
             err: errors.array()[0].msg
