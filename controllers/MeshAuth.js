@@ -54,8 +54,11 @@ exports.signUp = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(200).json({
-            param: erros.array()[0].param,
-            error: errors.array()[0].msg
+            meta: {
+                errorCode: 1,
+                message: errors.array()[0].msg
+            },
+            data: {}
         })
     }
 
@@ -64,16 +67,26 @@ exports.signUp = (req, res) => {
     meshUser.save((err, meshuser) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: "Not able to signup, Please check details"
+                },
+                data: {}
             })
         }
 
         signUpMail(meshuser.email, meshuser.name);
 
         res.json({
-            name: meshuser.name,
-            email: meshuser.email,
-            id: meshuser._id
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                name: meshuser.name,
+                email: meshuser.email,
+                id: meshuser._id
+            }
         })
     })
 }
@@ -85,28 +98,48 @@ exports.signIn = (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(422).json({
-            param: errors.array()[0].param,
-            error: erros.array()[0].msg
+            meta: {
+                errorCode: 1,
+                message: errors.array()[0].msg
+            },
+            data: {}
         })
     }
 
     MeshUser.findOne({ email: email }, (err, user) => {
 
         if (err || !user) {
-            return res.status(401).json({ err, user: user })
+            return res.status(401).json({
+                meta: {
+                    errorCode: 1,
+                    message: 'User Not Found'
+                },
+                data: {}
+            })
         }
 
         if (!user.authenticate(password)) {
-            return res.status(402).json({ err: "Email-Id and Password Do not match" })
+            return res.status(402).json({
+                meta: {
+                    errorCode: 1,
+                    message: "Email-Id and Password Do not match"
+                },
+                data: {}
+            })
         }
 
         const token = jwt.sign({ _id: user._id }, process.env.SECRET);
         const { _id, name, email, mobile } = user;
 
-        console.log("HERe")
-
         return res.json({
-            token, user: { _id, name, email, mobile }
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                token,
+                user: { _id, name, email, mobile }
+            }
         })
     })
 }
@@ -115,7 +148,11 @@ exports.signOut = (req, res) => {
     res.clearCookie('token');
 
     res.json({
-        msg: "User Signed Out Successfully"
+        meta: {
+            errorCode: 0,
+            message: 'User Signed Out Successfully'
+        },
+        data: {}
     })
 }
 
@@ -127,11 +164,21 @@ exports.updateProfile = (req, res) => {
     ).exec((err, updatedDetails) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
 
-        res.json(updatedDetails);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: updatedDetails
+        });
     })
 }
 
@@ -139,11 +186,23 @@ exports.getAllMeshDetails = (req, res) => {
     MeshUser.find().exec((err, meshes) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
 
-        res.json(meshes);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                meshes
+            }
+        });
     })
 }
 
@@ -152,16 +211,24 @@ exports.removeMeshUser = (req, res) => {
     MeshUser.findByIdAndRemove({ _id: req.mesh._id }).exec((err, mesh) => {
         if (err || !mesh) {
             return res.status(400).json({
-                msg: "User not found",
-                err
+                meta: {
+                    errorCode: 1,
+                    message: "User Not Found",
+                    err: err
+                },
+                data: {}
             })
         }
 
         return res.json({
-            msg: "Mesh has been removed",
-            mesh: {
-                mesh
+            meta: {
+                errorCode: 0,
+                message: "Mesh has been removed"
+            },
+            data: {
+                mesh: mesh
             }
+
         });
     })
 }
@@ -171,12 +238,24 @@ exports.getMeshDetailsById = (req, res) => {
         .exec((err, mesh) => {
             if (err || !mesh) {
                 return res.status(400).json({
-                    msg: "User Not Found",
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: 'User Not Found',
+                        err
+                    },
+                    data: {}
                 })
             }
 
-            return res.json(mesh)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: {
+                    mesh
+                }
+            })
         })
 }
 
@@ -185,11 +264,21 @@ exports.getMeshDetail = (req, res) => {
         .exec((err, mesh) => {
             if (err || !mesh) {
                 return res.status(400).json({
-                    msg: "User not found",
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: "User not found",
+                        err
+                    },
+                    data: {}
                 })
             }
-            return res.json(mesh)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: { mesh }
+            })
         })
 }
 
@@ -200,11 +289,22 @@ exports.getMeshes = (req, res) => {
         .exec((err, mesh) => {
             if (err || !mesh) {
                 return res.status(400).json({
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: "Mess Not Found",
+                        err
+                    },
+                    data: {}
                 })
             }
 
-            return res.json(mesh)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: mes
+            })
         })
 }
 

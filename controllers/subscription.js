@@ -6,14 +6,20 @@ exports.addSubscription = (req, res) => {
     subscription.save((err, sub) => {
         if (err) {
             return res.status(400).json({
-                err,
-                msg: "Error Occured"
+                meta: {
+                    errorCode: 1,
+                    message: err,
+                },
+                data: {}
             })
         }
 
         return res.json({
-            msg: "subscription Added",
-            sub
+            meta: {
+                errorCode: 0,
+                message: "subscription Added"
+            },
+            data: sub
         });
     })
 }
@@ -24,11 +30,20 @@ exports.updatSubscription = (req, res) => {
     Subscription.findByIdAndUpdate({ _id: subscriptionId })
         .exec((err, sub) => {
             if (err) {
-                return res.status(400).json(err)
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                })
             }
             return res.json({
-                msg: "Subscription Updated",
-                sub
+                meta: {
+                    errorCode: 0,
+                    message: "Subscription Updated"
+                },
+                data: sub
             })
         })
 }
@@ -41,12 +56,21 @@ exports.removeSubscriptions = (req, res) => {
     Subscription.findByIdAndRemove({ id })
         .exec((err, sub) => {
             if (err) {
-                return res.status(400).json(err)
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                })
             }
 
             return res.json({
-                msg: "Subscription Removed",
-                sub
+                meta: {
+                    errorCode: 0,
+                    message: "Subscription Removed"
+                },
+                data: sub
             });
         })
 }
@@ -88,7 +112,13 @@ exports.allSubscriptions = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 1,
+                message: "success"
+            },
+            data
+        })
     })
 
     // Subscription.find().exec((err, subs) => {
@@ -103,7 +133,7 @@ exports.allSubscriptions = (req, res) => {
 }
 
 exports.viewMeshSubscriptions = (req, res) => {
-    console.log(req.profile._id)
+    // console.log(req.profile._id)
     Subscription.aggregate([
         { $match: { meshId: req.profile._id } },
         {
@@ -131,7 +161,13 @@ exports.viewMeshSubscriptions = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -164,7 +200,13 @@ exports.viewUserSubscription = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -199,7 +241,13 @@ exports.getUnSettledSubscriptions = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -210,7 +258,20 @@ exports.settleSubscriptions = (req, res) => {
         { $set: { "settled": true } }
     ).exec((err, subscription) => {
         if (err)
-            return res.status(400).json(err)
-        res.json(subscription)
+            return res.status(400).json({
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
+            })
+
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: subscription
+        })
     })
 }

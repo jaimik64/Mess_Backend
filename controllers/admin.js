@@ -9,12 +9,20 @@ exports.updateRole = (req, res) => {
     ).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
-                err: "User was not found"
+                meta: {
+                    errorCode: 1,
+                    message: "User not Found"
+                },
+                data: {}
             })
         }
 
         return res.json({
-            msg: "User Details Updated"
+            meta: {
+                errorCode: 0,
+                message: "User Details Updated"
+            },
+            data: {}
         })
     })
 }

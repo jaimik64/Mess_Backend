@@ -6,11 +6,22 @@ exports.createDetails = (req, res) => {
 
     details.save((err, rp) => {
         if (err) {
-            console.log(err)
-            return res.status(201).json(err)
+            return res.status(201).json({
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
+            })
         }
 
-        res.json(rp)
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: rp
+        })
     })
 }
 
@@ -28,11 +39,19 @@ exports.validateRpPayment = (req, res) => {
 
     if (isSignatureValid) {
         return res.json({
-            msg: "payment is successfull"
+            meta: {
+                errorCode: 0,
+                message: "payment is successfull"
+            },
+            data: {}
         })
     } else {
         return res.status(204).json({
-            msg: "Payment Verification Failed"
+            meta: {
+                errorCode: 1,
+                message: "Payment Verification Failed"
+            },
+            data: {}
         })
     }
 }

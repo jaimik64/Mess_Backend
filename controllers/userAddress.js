@@ -5,11 +5,14 @@ exports.getAddressId = (req, res, next, id) => {
         .exec((err, address) => {
             if (err) {
                 return res.status(400).json({
-                    error: "Address Not Found"
+                    meta: {
+                        errorCode: 1,
+                        message: "Address Not found"
+                    },
+                    data: {}
                 })
             }
             req.address = address;
-            console.log(req.address);
             next();
         })
 }
@@ -21,13 +24,23 @@ exports.addAddress = (req, res) => {
     address.save((err, address) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
 
         res.json({
-            id: address._id,
-            user: address.user
+            meta: {
+                errorCode: 1,
+                message: "No User was found"
+            },
+            data: {
+                id: address._id,
+                user: address.user
+            }
         })
     })
 }
@@ -40,11 +53,21 @@ exports.updateAddress = (req, res) => {
     ).exec((err, updatedAddress) => {
         if (err || !updatedAddress) {
             return res.status(400).json({
-                error: "Not Authorised to update this information"
+                meta: {
+                    errorCode: 1,
+                    message: "Not Authorised to update this information"
+                },
+                data: {}
             })
         }
 
-        res.json(updatedAddress);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: updatedAddress
+        });
     })
 }
 
@@ -55,10 +78,20 @@ exports.deleteAddress = (req, res) => {
     Address.findByIdAndRemove(id, (err, deletedData) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
-        res.json(deletedData);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: deletedData
+        });
     })
 }
 
@@ -73,7 +106,13 @@ exports.getAllAddresses = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: data
+        })
     })
 }
 
@@ -82,9 +121,19 @@ exports.getAllAddressByUserId = (req, res) => {
         .exec((err, addresses) => {
             if (err) {
                 return res.status(400).json({
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
                 })
             }
-            res.json(addresses);
+            res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: addresses
+            });
         })
 }

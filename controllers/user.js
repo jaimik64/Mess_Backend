@@ -5,7 +5,11 @@ exports.getUserById = (req, res, next, id) => {
     User.findById(id).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
-                error: "No User was found"
+                meta: {
+                    errorCode: 1,
+                    message: "No User was found"
+                },
+                data: {}
             })
         }
         req.profile = user;
@@ -18,7 +22,11 @@ exports.getRefUserById = (req, res, next, id) => {
     User.findById(id).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
-                error: "No User Was Found"
+                meta: {
+                    errorCode: 1,
+                    message: "No User was found"
+                },
+                data: {}
             })
         }
         req.refUser = user;
@@ -34,10 +42,20 @@ exports.updateProfile = (req, res) => {
     ).exec((err, updatedProfile) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
-        res.json(updatedProfile);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: updatedProfile
+        });
     })
 }
 
@@ -45,11 +63,21 @@ exports.getAllUsers = (req, res) => {
     User.find().exec((err, user) => {
         if (err) {
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
 
-        res.json(user)
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: user
+        })
     })
 }
 
@@ -59,13 +87,22 @@ exports.removeUser = (req, res) => {
         .exec((err, deletedUser) => {
             if (err) {
                 return res.status(400).json({
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
                 })
             }
             return res.json(
                 {
-                    msg: "Following User Removed",
-                    user: { deletedUser }
+                    meta: {
+                        errorCode: 0,
+                        message: "Following User Removed"
+                    },
+                    data: {
+                        user: { deletedUser }
+                    }
                 }
             );
         })
@@ -76,11 +113,21 @@ exports.getUserDetails = (req, res) => {
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
-                    error: "No User Was Found"
+                    meta: {
+                        errorCode: 1,
+                        message: "No User was found"
+                    },
+                    data: {}
                 })
             }
 
-            return res.json(user)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: user
+            })
         })
 }
 

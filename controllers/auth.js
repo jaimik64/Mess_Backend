@@ -79,7 +79,7 @@ exports.signin = (req, res) => {
             return res.status(400).json({
                 meta: {
                     errorCode: 1,
-                    message: 'EmailId and Password do not match'
+                    message: 'Email-Id and Password do not match'
                 },
                 data: {}
             })

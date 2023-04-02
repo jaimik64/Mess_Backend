@@ -7,36 +7,53 @@ exports.addDishInDay = (req, res) => {
 
     dayData.save((err, day) => {
         if (err) {
-            console.log(err);
             return res.status(400).json({
-                err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
         res.json({
-            day: day.dname,
-            rate: day.rate,
-            isLunch: day.isLunch,
-            description: day.description,
-            meshUser: day.meshUser
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: {
+                day: day.dname,
+                rate: day.rate,
+                isLunch: day.isLunch,
+                description: day.description,
+                meshUser: day.meshUser
+            }
         })
     })
 }
 
 exports.updateDish = (req, res) => {
-    console.log(req.body)
     Day.findByIdAndUpdate(
         { _id: req.item._id },
         { $set: req.body },
         { new: true, userFindAndModify: false }
     ).exec((err, updatedDish) => {
         console.log("ERR : " + err)
-        console.log("UPDATED DISH : " + updatedDish)
         if (err || !updatedDish) {
             return res.status(400).json({
-                error: "Not Authorized to update this information"
+                meta: {
+                    errorCode: 1,
+                    message: "Not Authorized to update this information"
+                },
+                data: {}
             })
         }
-        res.json(updatedDish)
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: updatedDish
+        })
     })
 }
 
@@ -47,12 +64,20 @@ exports.removeDish = (req, res) => {
         .exec((err, deletedDish) => {
             if (err) {
                 return res.status(400).json({
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
                 })
             }
 
             res.json({
-                deletedDish
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: deletedDish
             })
         })
 }
@@ -62,10 +87,20 @@ exports.getDishesByMeshId = (req, res) => {
         .exec((err, dishes) => {
             if (err) {
                 return res.status(400).json({
-                    err
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
                 })
             }
-            res.json(dishes)
+            res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: dishes
+            })
         })
 }
 
@@ -78,9 +113,21 @@ exports.getDishesByMeshIdToUser = (req, res) => {
     })
         .exec((err, dishes) => {
             if (err) {
-                return res.status(400).json(err)
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                })
             }
-            res.json(dishes)
+            res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: dishes
+            })
         })
 }
 
@@ -95,9 +142,21 @@ exports.getSubscriptionsByMeshIdToUser = (req, res) => {
         .exec((err, dishes) => {
             console.log(err)
             if (err) {
-                return res.status(400).json(err)
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                })
             }
-            return res.json(dishes)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: dishes
+            })
         })
 }
 
@@ -128,7 +187,13 @@ exports.getAllDishes = (req, res) => {
             }
         }
     ]).then((data) => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: data
+        })
     })
 }
 
@@ -160,5 +225,11 @@ exports.getMashWiseDishes = async (req, res) => {
         }
     ])
 
-    return res.json({ data: getDishes })
+    return res.json({
+        meta: {
+            errorCode: 0,
+            message: "success"
+        },
+        data: getDishes
+    })
 }

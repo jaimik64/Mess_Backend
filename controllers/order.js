@@ -6,10 +6,13 @@ exports.getOrderById = (req, res, next, id) => {
     Order.findById(id).exec((err, order) => {
         if (err || !order) {
             return res.status(400).json({
-                error: err
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
             })
         }
-        console.log(order)
         req.order = order
         next();
     })
@@ -51,7 +54,13 @@ exports.getAllOrders = (req, res) => {
             }
         }
     ]).then((data) => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -93,7 +102,13 @@ exports.getOrderDetailsByUserId = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -125,7 +140,13 @@ exports.getOrdersByMessId = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -160,7 +181,13 @@ exports.getUnSettledOrders = (req, res) => {
             }
         }
     ]).then(data => {
-        return res.json(data)
+        return res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data
+        })
     })
 }
 
@@ -170,9 +197,21 @@ exports.settleOrders = (req, res) => {
         { $set: { "settled": true } }
     ).exec((err, order) => {
         if (err) {
-            return res.status(400).json(err);
+            return res.status(400).json({
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
+            });
         }
-        res.json(order)
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: order
+        })
     })
 }
 
@@ -181,9 +220,23 @@ exports.createOrder = (req, res) => {
 
     order.save((err, order) => {
         if (err) {
-            return res.status(400).json(err);
+            return res.status(400).json(
+                {
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                }
+            );
         }
-        res.json(order);
+        res.json({
+            meta: {
+                errorCode: 0,
+                message: "success"
+            },
+            data: order
+        });
     })
 }
 
@@ -201,11 +254,23 @@ exports.razorPayCreateOrder = (req, res) => {
         if (error) {
             // handle error
             console.log("ERROR : " + JSON.stringify(error))
-            return res.status(404).json(error)
+            return res.status(404).json({
+                meta: {
+                    errorCode: 1,
+                    message: err
+                },
+                data: {}
+            })
         } else {
             console.log("RES : " + JSON.stringify(response))
             // handle success
-            return res.json(response)
+            return res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: response
+            })
         }
     })
 }
@@ -214,9 +279,21 @@ exports.ordersByUserId = (req, res) => {
     Order.find({ userid: req.profile._id })
         .exec((err, order) => {
             if (err) {
-                return res.status(400).json(err);
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                });
             }
-            res.json(order);
+            res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: order
+            });
         })
 }
 
@@ -228,8 +305,20 @@ exports.updateOrder = (req, res) => {
     )
         .exec((err, order) => {
             if (err) {
-                return res.status(400).json(err);
+                return res.status(400).json({
+                    meta: {
+                        errorCode: 1,
+                        message: err
+                    },
+                    data: {}
+                });
             }
-            res.json(order)
+            res.json({
+                meta: {
+                    errorCode: 0,
+                    message: "success"
+                },
+                data: order
+            })
         })
 }
