@@ -114,7 +114,7 @@ exports.allSubscriptions = (req, res) => {
     ]).then(data => {
         return res.json({
             meta: {
-                errorCode: 1,
+                errorCode: 0,
                 message: "success"
             },
             data
