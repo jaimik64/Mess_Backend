@@ -303,7 +303,7 @@ exports.getMeshes = (req, res) => {
                     errorCode: 0,
                     message: "success"
                 },
-                data: mes
+                data: mesh
             })
         })
 }
