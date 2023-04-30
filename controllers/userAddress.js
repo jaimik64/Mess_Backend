@@ -34,8 +34,8 @@ exports.addAddress = (req, res) => {
 
         res.json({
             meta: {
-                errorCode: 1,
-                message: "No User was found"
+                errorCode: 0,
+                message: "Address added"
             },
             data: {
                 id: address._id,
