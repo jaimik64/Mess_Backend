@@ -8,10 +8,12 @@ const SubscriptionSchema = new mongoose.Schema({
         default: 0
     },
     toDate: {
-        type: Date
+        type: Date,
+        required: true
     },
     fromDate: {
-        type: Date
+        type: Date,
+        required: true
     },
     createdByWhom: {
         type: String,
@@ -34,7 +36,8 @@ const SubscriptionSchema = new mongoose.Schema({
         ref: "Day"
     },
     paymentId: {
-        type: String
+        type: String,
+        required: true
     },
     settled: {
         type: Boolean,
