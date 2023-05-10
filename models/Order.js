@@ -17,10 +17,12 @@ const OrderSchema = new mongoose.Schema({
         ref: "Address"
     },
     payment: {
-        type: String
+        type: String,
+        required: true
     },
     totalbill: {
-        type: Number
+        type: Number,
+        required: true
     },
     dishes: [
         {
