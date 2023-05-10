@@ -4,12 +4,14 @@ const { ObjectId } = mongoose.Schema;
 const addressSchema = mongoose.Schema({
     name: {
         type: String,
-        maxLength: 32
+        maxLength: 32,
+        required: true
     },
     mobile: {
         type: String,
         maxLength: 10,
-        minLength: 10
+        minLength: 10,
+        required: true
     },
     pincode: {
         type: Number,
