@@ -11,8 +11,14 @@ const DaySchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    description: String,
-    rate: Number,
+    description: {
+        type: String,
+        required: true
+    },
+    rate: {
+        type:Number,
+        required: true
+    },
     meshuser: {
         type: ObjectId,
         ref: 'MeshUserSchema'
