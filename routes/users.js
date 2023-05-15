@@ -6,11 +6,13 @@ const { getUserById, updateProfile, getUserDetails } = require('../controllers/u
 const { getMeshes, getMeshId, getMeshDetail } = require('../controllers/MeshAuth')
 const { addAddress, updateAddress, getAddressId, deleteAddress, getAllAddresses, getAllAddressByUserId } = require('../controllers/userAddress');
 const { getDishesByMeshIdToUser, getSubscriptionsByMeshIdToUser } = require('../controllers/day');
+const { updateOrder, getOrderById } = require('../controllers/order')
 
 // Params
 router.param("userId", getUserById);
 router.param("addressId", getAddressId)
-router.param("meshId", getMeshId)
+router.param("meshId", getMeshId);
+router.param('orderId', getOrderById);
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -44,5 +46,7 @@ router.post('/subscriptions/:userId/:meshId', isSignedIn, isAuthenticated, getSu
 router.post('/buy/subscription/:userId', isSignedIn, isAuthenticated, addSubscription)
 
 router.post('/subscription/:userId', isSignedIn, isAuthenticated, viewUserSubscription);
+
+router.put('/updateOrder/:userId/:orderId', isSignedIn, isAuthenticated, updateOrder);
 
 module.exports = router;
