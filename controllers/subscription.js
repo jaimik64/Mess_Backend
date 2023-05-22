@@ -112,7 +112,7 @@ exports.allSubscriptions = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -164,7 +164,7 @@ exports.viewMeshSubscriptions = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -206,7 +206,7 @@ exports.viewUserSubscription = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -250,7 +250,7 @@ exports.getUnSettledSubscriptions = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({

@@ -19,7 +19,7 @@ exports.getUserById = (req, res, next, id) => {
 
 exports.getRefUserById = (req, res, next, id) => {
 
-    User.findById(id).sort({createdAt: 1}).exec((err, user) => {
+    User.findById(id).sort({ createdAt: -1 }).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 meta: {
@@ -60,7 +60,7 @@ exports.updateProfile = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
-    User.find().sort({createdAt: 1}).exec((err, user) => {
+    User.find().sort({ createdAt: -1 }).exec((err, user) => {
         if (err) {
             return res.status(400).json({
                 meta: {
@@ -109,7 +109,7 @@ exports.removeUser = (req, res) => {
 }
 
 exports.getUserDetails = (req, res) => {
-    User.findById(req.profile._id).sort({createdAt: 1})
+    User.findById(req.profile._id).sort({ createdAt: -1 })
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({

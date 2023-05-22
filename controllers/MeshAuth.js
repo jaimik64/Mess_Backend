@@ -33,7 +33,7 @@ exports.getMeshId = (req, res, next, id) => {
 
 exports.getItemById = (req, res, next, id) => {
 
-    Day.findById(id)
+    Day.findById(id).sort({ createdAt: -1 })
         .exec((err, item) => {
             if (err) {
                 return res.status(400).json({
@@ -45,7 +45,7 @@ exports.getItemById = (req, res, next, id) => {
 
             req.item = item;
             next();
-        }).sort({createdAt: 1})
+        })
 }
 
 exports.signUp = (req, res) => {
@@ -183,7 +183,7 @@ exports.updateProfile = (req, res) => {
 }
 
 exports.getAllMeshDetails = (req, res) => {
-    MeshUser.find().exec((err, meshes) => {
+    MeshUser.find().sort({ createdAt: -1 }).exec((err, meshes) => {
         if (err) {
             return res.status(400).json({
                 meta: {
@@ -203,7 +203,7 @@ exports.getAllMeshDetails = (req, res) => {
                 meshes
             }
         });
-    }).sort({createdAt: 1})
+    })
 }
 
 exports.removeMeshUser = (req, res) => {
@@ -260,7 +260,7 @@ exports.getMeshDetailsById = (req, res) => {
 }
 
 exports.getMeshDetail = (req, res) => {
-    MeshUser.findById(req.mesh.id)
+    MeshUser.findById(req.mesh.id).sort({ createdAt: -1 })
         .exec((err, mesh) => {
             if (err || !mesh) {
                 return res.status(400).json({
@@ -279,13 +279,13 @@ exports.getMeshDetail = (req, res) => {
                 },
                 data: { mesh }
             })
-        }).sort({createdAt: 1})
+        })
 }
 
 
 exports.getMeshes = (req, res) => {
 
-    MeshUser.find()
+    MeshUser.find().sort({ createdAt: -1 })
         .exec((err, mesh) => {
             if (err || !mesh) {
                 return res.status(400).json({
@@ -305,6 +305,6 @@ exports.getMeshes = (req, res) => {
                 },
                 data: mesh
             })
-        }).sort({createdAt: 1})
+        })
 }
 

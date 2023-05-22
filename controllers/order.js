@@ -54,7 +54,7 @@ exports.getAllOrders = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then((data) => {
         return res.json({
@@ -105,7 +105,7 @@ exports.getOrderDetailsByUserId = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -146,7 +146,7 @@ exports.getOrdersByMessId = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -190,7 +190,7 @@ exports.getUnSettledOrders = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -288,7 +288,7 @@ exports.razorPayCreateOrder = (req, res) => {
 }
 
 exports.ordersByUserId = (req, res) => {
-    Order.find({ userid: req.profile._id }).sort({createdAt:1})
+    Order.find({ userid: req.profile._id }).sort({ createdAt: -1 })
         .exec((err, order) => {
             if (err) {
                 return res.status(400).json({
@@ -306,7 +306,7 @@ exports.ordersByUserId = (req, res) => {
                 },
                 data: order
             });
-        }).sort({createdAt: 1})
+        })
 }
 
 exports.updateOrder = (req, res) => {

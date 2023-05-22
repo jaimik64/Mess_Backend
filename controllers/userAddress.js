@@ -106,7 +106,7 @@ exports.getAllAddresses = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then(data => {
         return res.json({
@@ -120,7 +120,7 @@ exports.getAllAddresses = (req, res) => {
 }
 
 exports.getAllAddressByUserId = (req, res) => {
-    Address.find({ user: req.profile._id }).sort({createdAt: 1})
+    Address.find({ user: req.profile._id }).sort({ createdAt: -1 })
         .exec((err, addresses) => {
             if (err) {
                 return res.status(400).json({

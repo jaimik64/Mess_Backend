@@ -110,7 +110,7 @@ exports.getDishesByMeshIdToUser = (req, res) => {
             { meshuser: req.mesh._id },
             { dayname: { $ne: "Subscription" } }
         ]
-    })
+    }).sort({ createdAt: -1 })
         .exec((err, dishes) => {
             if (err) {
                 return res.status(400).json({
@@ -138,7 +138,7 @@ exports.getSubscriptionsByMeshIdToUser = (req, res) => {
             { meshuser: req.mesh._id },
             { dayname: { $eq: "Subscription" } }
         ]
-    })
+    }).sort({ createdAt: -1 })
         .exec((err, dishes) => {
             console.log(err)
             if (err) {
@@ -187,7 +187,7 @@ exports.getAllDishes = (req, res) => {
             }
         },
         {
-            $sort: {createdAt: 1}
+            $sort: { createdAt: -1 }
         }
     ]).then((data) => {
         return res.json({
