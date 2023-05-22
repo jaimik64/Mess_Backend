@@ -45,7 +45,7 @@ exports.getItemById = (req, res, next, id) => {
 
             req.item = item;
             next();
-        })
+        }).sort({createdAt: 1})
 }
 
 exports.signUp = (req, res) => {
@@ -203,7 +203,7 @@ exports.getAllMeshDetails = (req, res) => {
                 meshes
             }
         });
-    })
+    }).sort({createdAt: 1})
 }
 
 exports.removeMeshUser = (req, res) => {
@@ -279,7 +279,7 @@ exports.getMeshDetail = (req, res) => {
                 },
                 data: { mesh }
             })
-        })
+        }).sort({createdAt: 1})
 }
 
 
@@ -305,6 +305,6 @@ exports.getMeshes = (req, res) => {
                 },
                 data: mesh
             })
-        })
+        }).sort({createdAt: 1})
 }
 
