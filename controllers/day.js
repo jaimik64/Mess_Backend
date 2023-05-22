@@ -185,6 +185,9 @@ exports.getAllDishes = (req, res) => {
                 }],
                 as: "meshUser"
             }
+        },
+        {
+            $sort: {createdAt: 1}
         }
     ]).then((data) => {
         return res.json({
