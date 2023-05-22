@@ -288,7 +288,7 @@ exports.razorPayCreateOrder = (req, res) => {
 }
 
 exports.ordersByUserId = (req, res) => {
-    Order.find({ userid: req.profile._id })
+    Order.find({ userid: req.profile._id }).sort({createdAt:1})
         .exec((err, order) => {
             if (err) {
                 return res.status(400).json({
