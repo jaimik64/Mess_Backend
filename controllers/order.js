@@ -52,6 +52,9 @@ exports.getAllOrders = (req, res) => {
                 foreignField: "_id",
                 as: "DishDetails"
             }
+        },
+        {
+            $sort: {createdAt: 1}
         }
     ]).then((data) => {
         return res.json({
@@ -100,6 +103,9 @@ exports.getOrderDetailsByUserId = (req, res) => {
                 foreignField: "_id",
                 as: "DishDetails"
             }
+        },
+        {
+            $sort: {createdAt: 1}
         }
     ]).then(data => {
         return res.json({
@@ -138,6 +144,9 @@ exports.getOrdersByMessId = (req, res) => {
                 foreignField: "_id",
                 as: "dishDetails"
             }
+        },
+        {
+            $sort: {createdAt: 1}
         }
     ]).then(data => {
         return res.json({
@@ -179,6 +188,9 @@ exports.getUnSettledOrders = (req, res) => {
                 meshUsers: { $push: "$$ROOT" },
                 total: { $sum: "$totalbill" }
             }
+        },
+        {
+            $sort: {createdAt: 1}
         }
     ]).then(data => {
         return res.json({
@@ -294,7 +306,7 @@ exports.ordersByUserId = (req, res) => {
                 },
                 data: order
             });
-        })
+        }).sort({createdAt: 1})
 }
 
 exports.updateOrder = (req, res) => {
