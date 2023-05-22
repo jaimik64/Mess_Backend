@@ -60,7 +60,7 @@ exports.updateProfile = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
-    User.find().sort({ createdAt: -1 }).exec((err, user) => {
+    User.find().exec((err, user) => {
         if (err) {
             return res.status(400).json({
                 meta: {
